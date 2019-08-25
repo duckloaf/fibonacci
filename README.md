@@ -2,26 +2,25 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.0.
 
-## Development server
+## Demo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+[Click here to see a running demo of this project](http://52.62.237.183/fibonacci)
 
-## Code scaffolding
+## Requirements
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. On startup, the program will prompt the user for the number of seconds (X) between outputting the frequency of each number to the screen.
+2. Every X seconds the program will display, in frequency descending order, the list of numbers and their frequency.
+3. If the user enters 'halt' the timer should pause.
+4. If the user enters 'resume' the timer should resume.
+5. If the user enters a number that is one of the first 1000 Fibonacci numbers, the system should alert "FIB"
+6. If the user enters 'quit', the application should output the numbers and their frequency, a farewell message, and finally terminate.
 
-## Build
+## Code Features
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+A behaviour subject is used to subscribe to the text input. A minimum of 3 characters must be entered before triggering the API call. A debounce time of 500ms is used to the user has time to finish typing before triggering the API call (the app shouldn't call the API on every keystroke, unless the user is a slow typer!). 
 
-## Running unit tests
+The input also makes use of the **distinctUntilChanged()** function which will prevent the API call from triggering unless the input has changed after the debounce time (e.g. entering 'E' then 'Backspace' then 'E' will *not* trigger the API call).
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+A custom date filter is used to change the article time from ZULU format to a human-readable format.
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+For style points, Bootstrap is used and the articles are given a different colour depending on their popularity.

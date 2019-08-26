@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, Observable, timer } from 'rxjs';
-import { isNumber } from 'util';
-import { Fibonacci } from './fibonacci.service';
-import { NumberValidation } from './number-validate.service';
+import { FibonacciService } from './fibonacci.service';
+import { NumberValidationService } from './number-validate.service';
 
 
 @Component({
@@ -24,8 +23,8 @@ export class AppComponent implements OnInit {
     outputStrings: string[] = [];
 
     constructor(
-        private fib: Fibonacci,
-        private numVal: NumberValidation
+        private fib: FibonacciService,
+        private numVal: NumberValidationService
     ) {}
 
     ngOnInit() {

@@ -4,7 +4,7 @@ import { isNumber } from 'util';
 @Injectable({
     providedIn: 'root'
 })
-export class NumberValidation {
+export class NumberValidationService {
     
     /**
      * Numbers entered must be positive integers.

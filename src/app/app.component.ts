@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription, Observable, timer } from 'rxjs';
 import { isNumber } from 'util';
 import { Fibonacci } from './fibonacci.service';
+import { NumberValidation } from './number-validate.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
     outputStrings: string[] = [];
 
     constructor(
-        private fib: Fibonacci
+        private fib: Fibonacci,
+        private numVal: NumberValidation
     ) {}
 
     ngOnInit() {
@@ -34,19 +36,14 @@ export class AppComponent implements OnInit {
     }
 
     startProgram(): void {
-        // The refresh interval must be a number
-        if (!isNumber(this.refreshTimeInput)) {
-            this.refreshTimeInput = 0;
+        const trustedValue = this.numVal.sanitiseInput(this.refreshTimeInput);
+        if (!trustedValue) {
             return;
-        }
-        // The refresh interval must be a positive integer
-        if (this.refreshTimeInput < 1) {
-            this.refreshTime = 5;
-            this.refreshTimeDisplay = 1;
         } else {
-            this.refreshTime = Math.round(this.refreshTimeInput) * 5;
-            this.refreshTimeDisplay = Math.round(this.refreshTimeInput);
+            this.refreshTime = trustedValue * 5;
+            this.refreshTimeDisplay = trustedValue;
         }
+
         this.timerPaused = false;
         this.refreshTicker = this.refreshTime;
         this.outputStrings.push(`${this.refreshTimeInput}`);
@@ -79,17 +76,18 @@ export class AppComponent implements OnInit {
         return 100 * (this.refreshTicker / this.refreshTime);
     }
 
-    numberEntered() {
-        this.outputStrings.push(`${this.numberInput}`);
+    numberEntered(): void {
+        const trustedValue = this.numVal.sanitiseInput(this.numberInput);
+        this.outputStrings.push(`${trustedValue}`);
 
-        if (this.fib.isFibonacciNumber(this.numberInput)) {
+        if (this.fib.isFibonacciNumber(trustedValue)) {
             this.outputStrings.push('FIB');
         }
 
-        if (!this.enteredNumbers[this.numberInput]) {
-            this.enteredNumbers[this.numberInput] = 0;
+        if (!this.enteredNumbers[trustedValue]) {
+            this.enteredNumbers[trustedValue] = 0;
         }
-        this.enteredNumbers[this.numberInput] = this.enteredNumbers[this.numberInput] + 1;
+        this.enteredNumbers[trustedValue] = this.enteredNumbers[trustedValue] + 1;
     }
 
     outputEnteredNumbers(): string {
@@ -103,7 +101,6 @@ export class AppComponent implements OnInit {
                 outputString += `${valuePair.enteredNumber}:${valuePair.frequency}, `;
             }
         })
-        // console.log(outputString.substr(0, outputString.length - 2));
         return outputString.substr(0, outputString.length - 2);
     }
 
